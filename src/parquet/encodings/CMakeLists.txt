@@ -24,7 +24,7 @@ install(FILES
   delta-length-byte-array-encoding.h
   dictionary-encoding.h
   plain-encoding.h
-  DESTINATION include/parquet/encodings)
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/parquet/encodings)
 
 ADD_PARQUET_TEST(encoding-test)
 ADD_PARQUET_BENCHMARK(encoding-benchmark)

@@ -15,8 +15,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-cmake_minimum_required(VERSION 2.6)
-project(parquet-cpp)
+cmake_minimum_required(VERSION 3.6)
+project(parquet-cpp VERSION 0.0.1)
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A C++ library to read and write the Apache Parquet columnar data format.")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_VENDOR        "Apache")
+set(CPACK_PACKAGE_CONTACT       "Mike Trinkala <trink@mozilla.com>")
+set(CPACK_STRIP_FILES           TRUE)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_RPM_PACKAGE_LICENSE "Apachev2.0")
+include(CPack)
 
 if (NOT "$ENV{PARQUET_GCC_ROOT}" STREQUAL "")
   set(GCC_ROOT $ENV{PARQUET_GCC_ROOT})
@@ -27,6 +38,20 @@ endif()
 
 # generate CTest input files
 enable_testing()
+
+include(GNUInstallDirs)
+set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake_modules/${PROJECT_NAME}Config.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+                              INSTALL_DESTINATION ${INSTALL_CMAKE_DIR}
+                              PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+                                 COMPATIBILITY SameMajorVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+DESTINATION ${INSTALL_CMAKE_DIR})
 
 # where to find cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
@@ -397,11 +422,8 @@ endif()
 ############################################################
 # Visibility
 ############################################################
-# For generate_export_header() and add_compiler_export_flags().
-include(GenerateExportHeader)
-
-# Sets -fvisibility=hidden for gcc
-add_compiler_export_flags()
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 ############################################################
 # Includes
@@ -629,12 +651,8 @@ add_custom_target(clean-all
 # installation
 
 if (PARQUET_BUILD_STATIC)
-    install(TARGETS parquet_static
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib)
+    install(TARGETS parquet_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 if (PARQUET_BUILD_SHARED)
-    install(TARGETS parquet_shared
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib)
+    install(TARGETS parquet_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()

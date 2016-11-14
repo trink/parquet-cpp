@@ -18,6 +18,6 @@
 # Headers: compression
 install(FILES
   codec.h
-  DESTINATION include/parquet/compression)
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/parquet/compression)
 
 ADD_PARQUET_TEST(codec-test)

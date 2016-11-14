@@ -49,9 +49,7 @@ if (PARQUET_BUILD_SHARED)
         INSTALL_NAME_DIR "@rpath")
     endif()
 
-  install(TARGETS parquet_arrow_shared
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib)
+  install(TARGETS parquet_arrow_shared DESTINATION ${CMAKE_INSTALL_LIBDIR}}
 endif()
 
 if (PARQUET_BUILD_STATIC)
@@ -64,9 +62,7 @@ if (PARQUET_BUILD_STATIC)
       arrow_static
       arrow_io
       parquet_static)
-  install(TARGETS parquet_arrow_static
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib)
+  install(TARGETS parquet_arrow_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 ADD_PARQUET_TEST(arrow-schema-test)
@@ -99,4 +95,4 @@ install(FILES
   schema.h
   utils.h
   writer.h
-  DESTINATION include/parquet/arrow)
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/parquet/arrow)

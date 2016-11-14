@@ -20,7 +20,7 @@ install(FILES
   descriptor.h
   printer.h
   types.h
-  DESTINATION include/parquet/schema)
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/parquet/schema)
 
 ADD_PARQUET_TEST(schema-converter-test)
 ADD_PARQUET_TEST(schema-descriptor-test)
